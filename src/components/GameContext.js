@@ -7,6 +7,10 @@ export const useGame = () => useContext(GameContext);
 
 export const GameProvider = ({ children }) => {
   const [numCookies, setNumCookies] = usePersistedState(1000, "num-cookies");
+  const [timeClosed, setTimeClosed] = usePersistedState(
+    new Date().getTime(),
+    "time-closed"
+  );
   const [purchasedItems, setPurchasedItems] = usePersistedState(
     {
       cursor: 0,
@@ -34,6 +38,8 @@ export const GameProvider = ({ children }) => {
         purchasedItems,
         setPurchasedItems,
         calculateCookiesPerSecond,
+        setTimeClosed,
+        timeClosed,
       }}
     >
       {children}

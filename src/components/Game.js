@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { useGame } from "./GameContext";
@@ -9,14 +9,35 @@ import cookieSrc from "../cookie.svg";
 import Item from "./Item";
 import items from "../data";
 
-const Game = ({}) => {
+const Game = () => {
   const {
     numCookies,
     setNumCookies,
     purchasedItems,
     setPurchasedItems,
     calculateCookiesPerSecond,
+    setTimeClosed,
+    timeClosed,
   } = useGame();
+
+  const updateCookies = () => {
+    const timeOpened = new Date().getTime();
+    console.log("time opened type of " + typeof timeOpened);
+    console.log("time closed type of " + typeof timeClosed);
+    const secElapsed = (timeOpened - timeClosed) / 1000;
+    const cookiesWhileAway =
+      calculateCookiesPerSecond(purchasedItems) * secElapsed;
+    setNumCookies(Math.round(cookiesWhileAway));
+  };
+
+  window.addEventListener("beforeunload", () =>
+    setTimeClosed(new Date().getTime())
+  );
+
+  useEffect(() => {
+    updateCookies();
+  }, []);
+
   const incrementCookies = () => {
     setNumCookies((c) => c + 1);
   };
